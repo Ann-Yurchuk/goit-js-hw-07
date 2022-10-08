@@ -6,7 +6,7 @@ const galleryImage = onClickGalleryContainer(galleryItems);
 let modalContainer;
 
 galleryContainer.insertAdjacentHTML('beforeend', galleryImage);
-galleryContainer.addEventListener('keydown', onGalleryContainerClose);
+galleryContainer.addEventListener('click', galleryContainerClose);
 
 function onClickGalleryContainer(galleryItems) {
   return galleryItems.map(({ preview, original, description }) => {
@@ -26,18 +26,21 @@ function onClickGalleryContainer(galleryItems) {
 
 galleryContainer.addEventListener('click', event => {
   event.preventDefault();
+  window.addEventListener('keydown', galleryContainerClose);
   if (event.target.nodeName !== 'IMG') {
     return;
   }
   modalContainer = basicLightbox.create(`
 		<img src="${event.target.dataset.source}" width="1280" height="900">
 	`);
+
   modalContainer.show();
 });
 
-function onGalleryContainerClose(event) {
-  if (event.code !== 'Escape') {
-    return;
+function galleryContainerClose(event){
+  window.removeEventListener('keydown', galleryContainerClose);
+ if (event.code !== 'Escape') {
+   return;
   }
- modalContainer.close();
+    modalContainer.close();
 };
