@@ -1,6 +1,5 @@
 import { galleryItems } from './gallery-items.js';
 
-
 const galleryContainer = document.querySelector('.gallery');
 const galleryImage = onClickGalleryContainer(galleryItems);
 let modalContainer;
@@ -26,21 +25,25 @@ function onClickGalleryContainer(galleryItems) {
 
 galleryContainer.addEventListener('click', event => {
   event.preventDefault();
-  window.addEventListener('keydown', galleryContainerClose);
+  
   if (event.target.nodeName !== 'IMG') {
     return;
   }
   modalContainer = basicLightbox.create(`
 		<img src="${event.target.dataset.source}" width="1280" height="900">
-	`);
+	`, {
+    onShow: () => { window.addEventListener('keydown', galleryContainerClose) },
+    onClose: () => { window.removeEventListener('keydown', galleryContainerClose) },
+  });
 
   modalContainer.show();
 });
 
 function galleryContainerClose(event){
-  window.removeEventListener('keydown', galleryContainerClose);
+  
  if (event.code !== 'Escape') {
    return;
-  }
-    modalContainer.close();
+ }
+  
+  modalContainer.close();
 };
